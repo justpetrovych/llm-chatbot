@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 interface ChatMessageProps {
   id: string;
@@ -12,7 +13,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ id, content, isUser }) => (
     id={id}
   >
     <div className="avatar">{isUser ? 'U' : 'AI'}</div>
-    <div className="message-bubble">{content}</div>
+    <div className="message-bubble">
+      <ReactMarkdown>{content}</ReactMarkdown>
+    </div>
   </div>
 );
 
