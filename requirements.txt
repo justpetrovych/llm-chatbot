@@ -1,0 +1,6 @@
+fastapi
+langchain
+langchain_ollama
+pydantic
+uuid
+uvicorn
