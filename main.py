@@ -45,8 +45,8 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             req = await websocket.receive_text()
             data = json.loads(req)
-            request_id = data['id']
-            user_msg = data['content']
+            request_id = data['userMsgId']
+            user_msg = data['userMsg']
             response_id = str(uuid.uuid4())[:6]
             await websocket.send_text(json.dumps({
                 'status': 'msg-received',
@@ -77,4 +77,4 @@ async def websocket_endpoint(websocket: WebSocket):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)````
+    uvicorn.run(app, host="0.0.0.0", port=8000)
