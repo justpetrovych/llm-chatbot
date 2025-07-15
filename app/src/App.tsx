@@ -148,6 +148,7 @@ const App = () => {
       <Header
         isConnected={isConnected}
         isDarkTheme={isDarkTheme}
+        label="LLM ChatBot"
         onToggleTheme={() => setIsDarkTheme((v) => !v)}
       />
       <div className="chat-container" id="chatContainer" ref={chatContainerRef}>

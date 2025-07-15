@@ -1,7 +1,6 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from langchain_ollama import ChatOllama
 import logging
 import json
@@ -27,15 +26,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# get template from static/index.html
+template = open("static/index.html").read()
 
 @app.get("/")
 async def root():
-    return HTMLResponse("""
-    <script>
-        window.location.href = '/static/index.html';
-    </script>
-    """)
+    return HTMLResponse(template)
 
 
 @app.websocket("/ws")
