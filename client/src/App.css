@@ -166,6 +166,34 @@ body {
     position: relative;
 }
 
+button.copy-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    padding: 4px;
+    border-radius: 4px;
+    color: var(--text-color, #666);
+}
+
+.copy-button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.message:hover .copy-button {
+  opacity: 1;
+}
+
+.copy-button:focus {
+  opacity: 1;
+  outline: 1px solid var(--accent-color, #007bff);
+}
+
 .bot-message .message-bubble {
     background-color: var(--bot-message-bg);
     border-top-left-radius: 0;
