@@ -56,7 +56,7 @@ const App = () => {
       ...prev,
       {
         id: message.userMsgId,
-        content: message.userMsg,
+        content: message.assistantMsg,
         isUser: true,
       },
     ]);
