@@ -21,7 +21,7 @@ The frontend provides a clean, responsive chat interface.
 - [x] Implement dark/light theme auto-switch based on system settings.
 - [x] Enable Markdown in AI/model responses.
 - [ ] Enable code formatting in AI/model responses.
-- [ ] Add the ability to copy the AI/model response
+- [x] Add the ability to copy the AI/model response
 - [x] Use Pydantic for data validation
 - [x] Add loading/error states for network issues.
 - [ ] Add support for multiple AI models (model selection dropdown).
