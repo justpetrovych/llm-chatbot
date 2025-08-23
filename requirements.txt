@@ -6,3 +6,4 @@ uuid
 uvicorn
 websockets
 dotenv
+requests

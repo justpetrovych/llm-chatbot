@@ -21,10 +21,11 @@ The frontend provides a clean, responsive chat interface.
 - [x] Implement dark/light theme auto-switch based on system settings.
 - [x] Enable Markdown in AI/model responses.
 - [ ] Enable code formatting in AI/model responses.
-- [ ] Add the ability to copy the AI/model response
+- [ ] Enable math formulas formatting - LaTex or KaTex ([Use remark and rehype plugins (math)](https://github.com/remarkjs/react-markdown?tab=readme-ov-file#use-remark-and-rehype-plugins-math))
+- [x] Add the ability to copy the AI/model response
 - [x] Use Pydantic for data validation
 - [x] Add loading/error states for network issues.
-- [ ] Add support for multiple AI models (model selection dropdown).
+- [x] Add support for multiple AI models (model selection dropdown).
 - [ ] Add the right side panel with the model settings (temperature, top_p, etc.)
 - [ ] Implement the persistent chat history (store messages in a database).
 - [ ] Add the left panel with the chat list and button 'new chat'

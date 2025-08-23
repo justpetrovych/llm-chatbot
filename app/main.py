@@ -1,8 +1,8 @@
 """Main FastAPI application."""
 
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, WebSocket
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, WebSocket, Request, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import config
@@ -55,7 +55,7 @@ async def root():
     """Serve the main HTML page."""
     return HTMLResponse(load_cached_template())
 
-@app.get("/health", response_model=HealthCheckResponse)
+@app.get("/api/health", response_model=HealthCheckResponse)
 async def health_check():
     """Health check endpoint."""
     return HealthCheckResponse(
@@ -64,7 +64,7 @@ async def health_check():
         version="0.1.0"
     )
 
-@app.get("/metrics")
+@app.get("/api/metrics")
 async def metrics():
     """Metrics endpoint for monitoring."""
     return {
@@ -77,6 +77,24 @@ async def metrics():
             "port": config.PORT
         }
     }
+
+@app.get("/api/models")
+async def get_models():
+    """Return the list of available ollama models."""
+    return {"models": llm_service.get_available_models()}
+
+@app.post("/api/select_model")
+async def select_model(request: Request):
+    """Set the active ollama model."""
+    data = await request.json()
+    model_name = data.get("model")
+    if not model_name:
+        raise HTTPException(status_code=400, detail="Missing 'model' in request body.")
+    try:
+        llm_service.set_model(model_name)
+        return JSONResponse({"success": True, "model": model_name})
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

@@ -1,5 +1,6 @@
 """LLM service for handling AI model interactions."""
 
+import requests
 from typing import AsyncGenerator, Optional
 from langchain_ollama import ChatOllama
 from ..config import config
@@ -14,6 +15,8 @@ class LLMService:
         """Initialize LLM service with specified model."""
         self.model_name = model_name or config.DEFAULT_MODEL_NAME
         self._llm = None
+        self._llm_list = []
+        self._load_ollama_models()
         self._initialize_llm()
 
     def _initialize_llm(self) -> None:
@@ -55,6 +58,24 @@ class LLMService:
         except Exception as e:
             logger.error(f"Error getting LLM response: {e}")
             raise
+
+    def _load_ollama_models(self):
+        if len(self._llm_list):
+            return
+        models = requests.get('http://localhost:11434/api/tags').json()
+        for model in models['models']:
+            self._llm_list.append(model['model'])
+
+    def get_available_models(self):
+        """Return the list of available ollama models."""
+        return self._llm_list
+
+    def set_model(self, model_name: str):
+        """Set the active model and re-initialize the LLM."""
+        if model_name not in self._llm_list:
+            raise ValueError(f"Model '{model_name}' is not available.")
+        self.model_name = model_name
+        self._initialize_llm()
 
     def is_healthy(self) -> bool:
         """Check if LLM service is healthy."""

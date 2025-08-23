@@ -6,6 +6,7 @@ import Header from './components/Header';
 import ChatMessage from './components/ChatMessage';
 import InputPanel from './components/InputPanel';
 
+const API_URL = 'http://localhost:8000/api';
 const WS_URL = 'ws://localhost:8000/ws';
 
 interface WSChatMessage {
@@ -24,7 +25,29 @@ const App = () => {
   const [typing, setTyping] = useState(false);
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [pendingUserMsgId, setPendingUserMsgId] = useState<string | null>(null);
+  const [models, setModels] = useState<string[]>([]);
+  const [selectedModel, setSelectedModel] = useState<string>('');
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch(`${API_URL}/models`)
+      .then(res => res.json())
+      .then(data => {
+        setModels(data.models || []);
+        if (data.models && data.models.length > 0) {
+          setSelectedModel(data.models[0]);
+        }
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!selectedModel) return;
+    fetch(`${API_URL}/select_model`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: selectedModel })
+    });
+  }, [selectedModel]);
 
   // Theme toggle effect
   useEffect(() => {
@@ -150,6 +173,10 @@ const App = () => {
         isDarkTheme={isDarkTheme}
         label="LLM ChatBot"
         onToggleTheme={() => setIsDarkTheme((v) => !v)}
+        models={models}
+        selectedModel={selectedModel}
+        setSelectedModel={setSelectedModel}
+        modelSelectDisabled={!isConnected || models.length === 0}
       />
       <div className="chat-container" id="chatContainer" ref={chatContainerRef}>
         {messages.map((msg) => (
