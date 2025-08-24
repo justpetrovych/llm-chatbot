@@ -1,6 +1,7 @@
 """Application configuration."""
 
 import os
+from datetime import datetime
 from dotenv import load_dotenv
 from typing import List
 
@@ -21,7 +22,11 @@ class Config:
 
     # Logging
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
-    LOG_FILE: str = os.getenv("LOG_FILE", "app.log")
+
+    def __init__(self):
+        """Initialize config with a timestamped log file name."""
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        self.LOG_FILE: str = f"logs/{timestamp}.app.log"
 
     # Security
     MAX_MESSAGE_LENGTH: int = int(os.getenv("MAX_MESSAGE_LENGTH", "1000"))
