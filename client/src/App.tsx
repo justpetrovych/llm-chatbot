@@ -9,12 +9,19 @@ import InputPanel from './components/InputPanel';
 const API_URL = 'http://localhost:8000/api';
 const WS_URL = 'ws://localhost:8000/ws';
 
+interface ThinkingBlockData {
+  content: string;
+  position: number;
+}
+
 interface WSChatMessage {
   role: string;
   userMsgId: string;
   assistantMsgId?: string;
   userMsg?: string;
   assistantMsg?: string;
+  hasThinking?: boolean;
+  thinkingBlocks?: ThinkingBlockData[];
 }
 
 const App = () => {
@@ -123,6 +130,24 @@ const App = () => {
     // Optionally show error
   };
 
+  const onThinkingParsed = (message: WSChatMessage) => {
+    // Update existing message with thinking blocks and cleaned content
+    setMessages((prev) => {
+      const idx = prev.findIndex((m) => m.id === message.assistantMsgId);
+      if (idx !== -1) {
+        const updated = [...prev];
+        updated[idx] = {
+          ...updated[idx],
+          content: message.assistantMsg,
+          hasThinking: message.hasThinking,
+          thinkingBlocks: message.thinkingBlocks,
+        };
+        return updated;
+      }
+      return prev;
+    });
+  };
+
   // WebSocket message handler
   useEffect(() => {
     if (!ws) return;
@@ -137,6 +162,9 @@ const App = () => {
           break;
         case 'response-stream':
           onExchangeStream(parsed);
+          break;
+        case 'thinking-parsed':
+          onThinkingParsed(parsed);
           break;
         case 'error':
           onExchangeError();
@@ -185,6 +213,8 @@ const App = () => {
             id={msg.id}
             content={msg.content}
             isUser={msg.isUser}
+            hasThinking={msg.hasThinking}
+            thinkingBlocks={msg.thinkingBlocks}
           />
         ))}
         {typing && <TypingIndicator />}

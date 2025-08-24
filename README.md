@@ -22,6 +22,7 @@ The frontend provides a clean, responsive chat interface.
 - [x] Enable Markdown in AI/model responses.
 - [ ] Enable code formatting in AI/model responses.
 - [ ] Enable math formulas formatting - LaTex or KaTex ([Use remark and rehype plugins (math)](https://github.com/remarkjs/react-markdown?tab=readme-ov-file#use-remark-and-rehype-plugins-math))
+- [x] Show the AI/model thinking blocks for reasonable models responses (`<think>Example of thinking block</think>`)
 - [x] Add the ability to copy the AI/model response
 - [x] Use Pydantic for data validation
 - [x] Add loading/error states for network issues.
