@@ -3,9 +3,10 @@ import uuid
 from fastapi import WebSocket, WebSocketDisconnect
 from pydantic import ValidationError
 
-from ..models import ChatMessage, WebSocketResponse
+from ..models import ChatMessage, WebSocketResponse, ThinkingBlock
 from ..services.llm_service import llm_service
 from ..utils.logging import get_logger
+from ..utils.thinking import parse_thinking_blocks
 from .manager import connection_manager
 
 logger = get_logger(__name__)
@@ -42,8 +43,12 @@ async def handle_chat_message(websocket: WebSocket, message: ChatMessage) -> Non
     ))
 
     try:
-        # Stream LLM response
+        # Accumulate full response for thinking block parsing
+        full_response = ""
+        
+        # Stream LLM response and accumulate
         async for chunk in llm_service.stream_response(message.userMsg):
+            full_response += chunk
             await send_response(websocket, WebSocketResponse(
                 status='response-stream',
                 role='assistant',
@@ -51,6 +56,28 @@ async def handle_chat_message(websocket: WebSocket, message: ChatMessage) -> Non
                 userMsg=None,
                 assistantMsgId=response_id,
                 assistantMsg=chunk
+            ))
+
+        # Parse thinking blocks from full response
+        parsed_message = parse_thinking_blocks(full_response)
+        
+        # If response contains thinking blocks, send parsed version
+        if parsed_message.has_thinking:
+            thinking_blocks = [
+                ThinkingBlock(content=block.content, position=block.position)
+                for block in parsed_message.thinking_blocks
+            ]
+            
+            # Send thinking blocks as separate message
+            await send_response(websocket, WebSocketResponse(
+                status='thinking-parsed',
+                role='assistant',
+                userMsgId=message.userMsgId,
+                userMsg=None,
+                assistantMsgId=response_id,
+                assistantMsg=parsed_message.main_content,
+                hasThinking=True,
+                thinkingBlocks=thinking_blocks
             ))
 
     except Exception as e:

@@ -302,6 +302,92 @@ button.copy-button {
     background: var(--secondary-gradient);
 }
 
+/* Thinking blocks styles */
+.thinking-blocks {
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    background-color: rgba(139, 92, 246, 0.05);
+    overflow: hidden;
+}
+
+[data-theme="dark"] .thinking-blocks {
+    background-color: rgba(139, 92, 246, 0.1);
+}
+
+.thinking-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.thinking-toggle:hover {
+    background-color: rgba(139, 92, 246, 0.1);
+}
+
+.thinking-icon {
+    color: #8b5cf6;
+    font-size: 1rem;
+}
+
+.thinking-label {
+    flex: 1;
+    text-align: left;
+}
+
+.thinking-chevron {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+}
+
+.thinking-content {
+    border-top: 1px solid var(--border-color);
+    background-color: rgba(139, 92, 246, 0.02);
+    animation: thinkingExpand 0.2s ease;
+}
+
+[data-theme="dark"] .thinking-content {
+    background-color: rgba(139, 92, 246, 0.05);
+}
+
+@keyframes thinkingExpand {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+
+.thinking-block {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.thinking-block:last-child {
+    border-bottom: none;
+}
+
+.thinking-block-content {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    font-style: italic;
+}
+
 @media (max-width: 768px) {
     .container {
         max-width: 100vw;
@@ -319,5 +405,22 @@ button.copy-button {
     }
     .input-container {
         padding: 0.75rem;
+    }
+    
+    .thinking-blocks {
+        margin-bottom: 0.75rem;
+    }
+    
+    .thinking-toggle {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    .thinking-block {
+        padding: 0.75rem;
+    }
+    
+    .thinking-block-content {
+        font-size: 0.8rem;
     }
 }

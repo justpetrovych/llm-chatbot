@@ -2,14 +2,28 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard, faCheck } from '@fortawesome/free-solid-svg-icons';
+import ThinkingBlock from './ThinkingBlock';
+
+interface ThinkingBlockData {
+  content: string;
+  position: number;
+}
 
 interface ChatMessageProps {
   id: string;
   content: string;
   isUser: boolean;
+  hasThinking?: boolean;
+  thinkingBlocks?: ThinkingBlockData[];
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ id, content, isUser }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ 
+  id, 
+  content, 
+  isUser, 
+  hasThinking, 
+  thinkingBlocks 
+}) => {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
@@ -29,6 +43,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ id, content, isUser }) => {
       >
         <div className="avatar">{isUser ? 'U' : 'AI'}</div>
         <div className="message-bubble">
+          {!isUser && hasThinking && thinkingBlocks && (
+            <ThinkingBlock thinkingBlocks={thinkingBlocks} />
+          )}
           <ReactMarkdown>{content}</ReactMarkdown>
           <button
             className="copy-button"

@@ -1,6 +1,6 @@
 """Pydantic models for request/response validation."""
 
-from typing import Optional
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field
 from .config import config
 
@@ -21,6 +21,12 @@ class ChatMessage(BaseModel):
     )
 
 
+class ThinkingBlock(BaseModel):
+    """Model for thinking block content."""
+    content: str = Field(..., description="Content of the thinking block")
+    position: int = Field(..., description="Position in the original text")
+
+
 class WebSocketResponse(BaseModel):
     """Model for WebSocket responses."""
     status: str = Field(..., description="Status of the response")
@@ -32,6 +38,11 @@ class WebSocketResponse(BaseModel):
         description="ID of the assistant message"
     )
     assistantMsg: Optional[str] = Field(None, description="Assistant's message content")
+    hasThinking: Optional[bool] = Field(None, description="Whether message has thinking blocks")
+    thinkingBlocks: Optional[List[ThinkingBlock]] = Field(
+        None, 
+        description="List of thinking blocks in the message"
+    )
 
     def to_json(self) -> str:
         """Convert to JSON string, excluding None values."""
